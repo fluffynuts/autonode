@@ -1,0 +1,65 @@
+#!/bin/bash
+
+function die() {
+    >&2 echo $1
+    exit 2
+}
+
+function grokVersionFromCurrentScriptName() {
+    echo $(basename $0) | sed -e 's/-/ /' | awk '{print $2}'
+}
+
+
+function findCurrentNodeName() {
+    nvm ls --no-colors | grep '^->' | awk '{print $2}'
+}
+
+function installNVM() {
+    URL=https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh
+    if which curl &> /dev/null; then
+        echo "Downloading and running $URL..."
+        curl -o- $URL | bash
+    elif which wget &> /dev/null; then
+        echo "Downloading and running $URL..."
+        wget -qO- $URL | bash
+    else
+        die "Unable to find curl or wget to download $URL. Please do so manually and run the shell script."
+    fi
+}
+
+if test -z "$NVM_HOME"; then
+    export NVM_DIR=$HOME/.nvm
+fi
+
+AUTO_INSTALLED_NVM=0
+if test ! -d $NVM_HOME; then
+    installNVM
+    AUTO_INSTALLED_NVM=1
+    NODE_BEFORE_INSTALL=$(which node)
+fi
+
+# have to do this inline as sourcing within a function seems to forget all the sourced stuff :/
+if test -e $NVM_DIR/nvm.sh; then
+    if ! source $NVM_DIR/nvm.sh; then
+        die "failed to source $NVM_DIR/nvm.sh"
+    fi
+fi
+
+if type nvm &> /dev/null; then
+    if test $AUTO_INSTALLED_NVM -eq 1 && test ! -z "$NODE_BEFORE_INSTALL"; then
+        # ensure that the default version is set to system
+        #   so as not to disrupt anyone else using nvm
+        nvm alias default system
+    fi
+else
+    die "Can't load nvm"
+fi
+
+if test -z "$NODE_VERSION"; then
+    NODE_VERSION=$(grokVersionFromCurrentScriptName)
+fi
+# install required version: if it's already there, nvm just says so
+nvm install $NODE_VERSION
+# get the full path to that node version
+NODE_PATH="$(nvm which $NODE_VERSION)"
+$NODE_PATH $*
