@@ -58,8 +58,13 @@ fi
 if test -z "$NODE_VERSION"; then
     NODE_VERSION=$(grokVersionFromCurrentScriptName)
 fi
-# install required version: if it's already there, nvm just says so
-nvm install $NODE_VERSION
-# get the full path to that node version
-NODE_PATH="$(nvm which $NODE_VERSION)"
-$NODE_PATH $*
+if test -z "$NODE_VERSION"; then
+    echo "No NODE_VERSION set or inferred from autonode script name: using default at $(which node)"
+    node $*
+else
+    # install required version: if it's already there, nvm just says so
+    nvm install $NODE_VERSION
+    # get the full path to that node version
+    NODE_PATH="$(nvm which $NODE_VERSION)"
+    $NODE_PATH $*
+fi
