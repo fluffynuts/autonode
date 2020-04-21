@@ -6,11 +6,11 @@ function die() {
 }
 
 function grokVersionFromCurrentScriptName() {
-    echo $(basename $0) | sed -e 's/-/ /' | awk '{print $2}'
+    echo "$(basename $0)" | sed -e 's/-/ /' | awk '{print $2}'
 }
 
 function grokModeFromCurrentScriptName() {
-    echo $(basename $0) | sed -e 's/-/ /' | awk '{print $1}' | sed -e 's/^auto//'
+    echo "$(basename $0)" | sed -e 's/-/ /' | awk '{print $1}' | sed -e 's/^auto//'
 }
 
 function findCurrentNodeName() {
@@ -42,8 +42,8 @@ if test ! -d $NVM_HOME; then
 fi
 
 # have to do this inline as sourcing within a function seems to forget all the sourced stuff :/
-if test -e $NVM_DIR/nvm.sh; then
-    if ! source $NVM_DIR/nvm.sh; then
+if test -e "$NVM_DIR/nvm.sh"; then
+    if ! source "$NVM_DIR/nvm.sh"; then
         die "failed to source $NVM_DIR/nvm.sh"
     fi
 fi
@@ -67,7 +67,7 @@ if test -z "$NODE_VERSION"; then
     $MODE $*
 else
     # install required version: if it's already there, nvm just says so
-    nvm install $NODE_VERSION
+    nvm install "$NODE_VERSION"
     # get the full path to that node version
     NODE_DIR="$(dirname $(nvm which $NODE_VERSION))"
     RUN_PATH="${NODE_DIR}/${MODE}"
