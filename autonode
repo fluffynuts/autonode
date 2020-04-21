@@ -9,6 +9,9 @@ function grokVersionFromCurrentScriptName() {
     echo $(basename $0) | sed -e 's/-/ /' | awk '{print $2}'
 }
 
+function grokModeFromCurrentScriptName() {
+    echo $(basename $0) | sed -e 's/-/ /' | awk '{print $1}' | sed -e 's/^auto//'
+}
 
 function findCurrentNodeName() {
     nvm ls --no-colors | grep '^->' | awk '{print $2}'
@@ -58,13 +61,15 @@ fi
 if test -z "$NODE_VERSION"; then
     NODE_VERSION=$(grokVersionFromCurrentScriptName)
 fi
+MODE=$(grokModeFromCurrentScriptName)
 if test -z "$NODE_VERSION"; then
     echo "No NODE_VERSION set or inferred from autonode script name: using default at $(which node)"
-    node $*
+    $MODE $*
 else
     # install required version: if it's already there, nvm just says so
     nvm install $NODE_VERSION
     # get the full path to that node version
-    NODE_PATH="$(nvm which $NODE_VERSION)"
-    $NODE_PATH $*
+    NODE_DIR="$(dirname $(nvm which $NODE_VERSION))"
+    RUN_PATH="${NODE_DIR}/${MODE}"
+    $RUN_PATH $*
 fi
