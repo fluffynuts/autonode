@@ -23,6 +23,8 @@ NODE_VERSION=12.16.1 ./autonode app.js
 
 ## Why?
 - NVM is awesome
+- But NVM has no "auto" mode where I could, for example, create an .nvmrc and expect nvm to install
+  the missing node version on-demand
 - Node versioning can be an issue: for example, a project built around node 8, which is to be upgraded to node 12, 
   where changes have to be made to go either way. When deploying, NVM would be nice to use here, but we don't want
   to set NVM to spawn the same version of node for everyone (just yet)
