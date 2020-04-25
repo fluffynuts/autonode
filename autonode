@@ -64,12 +64,12 @@ fi
 MODE=$(grokModeFromCurrentScriptName)
 if test -z "$NODE_VERSION"; then
     echo "No NODE_VERSION set or inferred from autonode script name: using default at $(which node)"
-    $MODE $*
+    $MODE "$@"
 else
     # install required version: if it's already there, nvm just says so
     nvm install "$NODE_VERSION"
     # get the full path to that node version
     NODE_DIR="$(dirname $(nvm which $NODE_VERSION))"
     RUN_PATH="${NODE_DIR}/${MODE}"
-    $RUN_PATH $*
+    $RUN_PATH "$@"
 fi
