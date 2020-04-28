@@ -30,12 +30,12 @@ function installNVM() {
     fi
 }
 
-if test -z "$NVM_HOME"; then
+if test -z "$NVM_DIR"; then
     export NVM_DIR=$HOME/.nvm
 fi
 
 AUTO_INSTALLED_NVM=0
-if test ! -d "$NVM_HOME"; then
+if test ! -d "$NVM_DIR"; then
     installNVM
     AUTO_INSTALLED_NVM=1
     NODE_BEFORE_INSTALL=$(which node)
