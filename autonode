@@ -71,5 +71,6 @@ else
     # get the full path to that node version
     NODE_DIR="$(dirname $(nvm which $NODE_VERSION))"
     RUN_PATH="${NODE_DIR}/${MODE}"
-    $RUN_PATH "$@"
+    # exec so that the child replaces this process
+    exec $RUN_PATH "$@"
 fi
