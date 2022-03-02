@@ -30,7 +30,7 @@ NODE_VERSION=12.16.1 ./autonode app.js
   to set NVM to spawn the same version of node for everyone (just yet)
   - basically, I wanted to upgrade a node 8 project to node 12 without causing system-wide or even shell-wide impact
 
-## How?
+## How does it work?
 - install NVM if it's not already available
 - determine the node version from file name or environment variable
 - ask NVM where the required version is
